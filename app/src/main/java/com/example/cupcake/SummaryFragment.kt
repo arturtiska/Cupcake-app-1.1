@@ -21,18 +21,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.cupcake.databinding.FragmentSummaryBinding
+import com.example.cupcake.model.OrderViewModel
 
 /**
- * [SummaryFragment] contains a summary of the order details with a button to share the order
- * via another app.
+ * [SummaryFragment] ccontém um resumo dos detalhes do pedido com um botão para compartilhar o pedido
+ * por outro aplicativo.
  */
 class SummaryFragment : Fragment() {
 
-    // Binding object instance corresponding to the fragment_summary.xml layout
-    // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
-    // when the view hierarchy is attached to the fragment.
+    // Instância de objeto de ligação correspondente ao layout fragment_summary.xml
+    // Esta propriedade não é nula entre os retornos de chamada do ciclo de vida onCreateView() e onDestroyView(),
+    // quando a hierarquia de exibição é anexada ao fragmento.
     private var binding: FragmentSummaryBinding? = null
+    private val sharedViewModel: OrderViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,21 +49,23 @@ class SummaryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding?.apply {
-            sendButton.setOnClickListener { sendOrder() }
-        }
+      binding?.apply {
+          lifecycleOwner = viewLifecycleOwner
+          viewModel = sharedViewModel
+          summaryFragment = this@SummaryFragment
+      }
     }
 
     /**
-     * Submit the order by sharing out the order details to another app via an implicit intent.
+     * Envie o pedido compartilhando os detalhes do pedido com outro aplicativo por meio de uma intenção implícita.
      */
     fun sendOrder() {
         Toast.makeText(activity, "Send Order", Toast.LENGTH_SHORT).show()
     }
 
     /**
-     * This fragment lifecycle method is called when the view hierarchy associated with the fragment
-     * is being removed. As a result, clear out the binding object.
+     * Este método de ciclo de vida do fragmento é chamado quando a hierarquia de exibição associada ao fragmento
+     * está sendo removido. Como resultado, limpe o objeto de ligação.
      */
     override fun onDestroyView() {
         super.onDestroyView()

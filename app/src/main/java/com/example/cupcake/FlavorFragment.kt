@@ -21,17 +21,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.cupcake.databinding.FragmentFlavorBinding
+import com.example.cupcake.model.OrderViewModel
 
 /**
- * [FlavorFragment] allows a user to choose a cupcake flavor for the order.
+ * [FlavorFragment] permite que um usuário escolha um sabor de cupcake para o pedido.
  */
 class FlavorFragment : Fragment() {
 
-    // Binding object instance corresponding to the fragment_flavor.xml layout
-    // This property is non-null between the onCreateView() and onDestroyView() lifecycle callbacks,
-    // when the view hierarchy is attached to the fragment.
+    // Instância de objeto de ligação correspondente ao layout fragment_flavor.xml
+    // Esta propriedade não é nula entre os retornos de chamada do ciclo de vida onCreateView() e onDestroyView(),
+    // quando a hierarquia de exibição é anexada ao fragmento.
     private var binding: FragmentFlavorBinding? = null
+
+    private val sharedViewModel : OrderViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,22 +49,23 @@ class FlavorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding?.apply {
-            nextButton.setOnClickListener { goToNextScreen() }
-        }
+         binding?.apply {
+             lifecycleOwner = viewLifecycleOwner
+             viewModel = sharedViewModel
+             flavorFragment = this@FlavorFragment
+         }
     }
 
     /**
-     * Navigate to the next screen to choose pickup date.
+     * Navegue até a próxima tela para escolher a data de coleta.
      */
     fun goToNextScreen() {
-        Toast.makeText(activity, "Next", Toast.LENGTH_SHORT).show()
+        findNavController().navigate(R.id.action_flavorFragment_to_pickupFragment)
     }
 
     /**
-     * This fragment lifecycle method is called when the view hierarchy associated with the fragment
-     * is being removed. As a result, clear out the binding object.
+     * Este método de ciclo de vida do fragmento é chamado quando a hierarquia de visualização associada ao fragmento
+     * está sendo removido. Como resultado, limpe o objeto de ligação.
      */
     override fun onDestroyView() {
         super.onDestroyView()
