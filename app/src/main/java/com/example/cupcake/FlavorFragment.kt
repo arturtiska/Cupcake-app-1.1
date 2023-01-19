@@ -36,7 +36,7 @@ class FlavorFragment : Fragment() {
     // quando a hierarquia de exibição é anexada ao fragmento.
     private var binding: FragmentFlavorBinding? = null
 
-    private val sharedViewModel : OrderViewModel by activityViewModels()
+    private val sharedViewModel: OrderViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,11 +49,11 @@ class FlavorFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-         binding?.apply {
-             lifecycleOwner = viewLifecycleOwner
-             viewModel = sharedViewModel
-             flavorFragment = this@FlavorFragment
-         }
+        binding?.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = sharedViewModel
+            flavorFragment = this@FlavorFragment
+        }
     }
 
     /**
@@ -70,5 +70,11 @@ class FlavorFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+    }
+
+    fun cancelOrder() {
+        sharedViewModel.resetOrder()
+        findNavController().navigate(R.id.action_flavorFragment_to_startFragment2)
+
     }
 }
